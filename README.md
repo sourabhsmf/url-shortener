@@ -19,5 +19,8 @@
 > `docker pull ghcr.io/sourabhsmf/url-shortener:master`
 
 ### Run docker container
-> `docker run --name app urlshortenerapp:latest`
+> `docker run -p 8080:8080 --name app urlshortenerapp:latest`
+
+### Swagger at
+> http://localhost:8080/swagger-ui/
 
