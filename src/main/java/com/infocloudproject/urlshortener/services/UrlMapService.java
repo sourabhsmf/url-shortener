@@ -42,7 +42,7 @@ public class UrlMapService implements UrlService{
     public Optional<urlDTO> find(urlDTO url) {
         urlDTO urlFound = null;
         for(urlDTO entry : map.values()){
-            if(entry.getExpandedURL().equals(url.getExpandedURL())) urlFound = url;
+            if(entry.getExpandedURL().equals(url.getExpandedURL())) urlFound = entry;
         }
         return Optional.ofNullable(urlFound);
     }
