@@ -3,7 +3,6 @@
 #
 FROM maven:3.8.1-amazoncorretto-11 as mavenbuilder
 
-
 # Cache our dependencies in this layer
 RUN mkdir -p /tmp/pom/
 COPY pom.xml /tmp/pom
@@ -26,6 +25,7 @@ RUN mvn -B -e -U clean package
 FROM openjdk:11.0-jre
 
 ENV WEBAPPS_HOME=/var/www
+ENV WRITE_TO_FILE false
 
 # Copy the built WAR file from our build container to this runtime container
 COPY --from=mavenbuilder /tmp/src/target/urlshortenerapp.jar $WEBAPPS_HOME/webapps/urlshortenerapp.jar
