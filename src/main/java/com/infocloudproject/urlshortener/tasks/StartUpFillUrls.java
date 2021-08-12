@@ -21,7 +21,7 @@ public class StartUpFillUrls implements CommandLineRunner{
 
     @Override
     public void run(String... args) throws Exception {
-        List<String> urlDtoEntries = Files.readAllLines(Paths.get("data.csv"), StandardCharsets.UTF_16);
+        List<String> urlDtoEntries = Files.readAllLines(Paths.get("data/data.csv"), StandardCharsets.UTF_16);
         if(!urlDtoEntries.isEmpty() && urlDtoEntries.get(0).length() > 1){
             urlMapService.addAll(urlDtoEntries);
         }

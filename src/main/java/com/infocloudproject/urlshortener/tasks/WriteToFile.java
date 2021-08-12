@@ -34,7 +34,7 @@ public class WriteToFile implements Runnable{
                         + "\n";
 
         try {
-            Files.writeString(Paths.get("data.csv"), toWrite, StandardCharsets.UTF_16, StandardOpenOption.APPEND);
+            Files.writeString(Paths.get("data/data.csv"), toWrite, StandardCharsets.UTF_16, StandardOpenOption.APPEND);
         }catch (IOException e) {
             e.printStackTrace();
         }
