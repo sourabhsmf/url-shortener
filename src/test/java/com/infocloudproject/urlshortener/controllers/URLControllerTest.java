@@ -57,7 +57,6 @@ public class URLControllerTest {
         //Given
         Set<URL> urlSetToReturn = new HashSet<>();
         urlSetToReturn.add(url1);
-        urlSetToReturn.add(url2);
         
         when(urlService.findAll()).thenReturn(urlSetToReturn);
 
@@ -65,10 +64,8 @@ public class URLControllerTest {
         mockMvc.perform(get("/api/"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].expandedURL").value("http://someexpandedurl.one/somepath"))
-                .andExpect(jsonPath("$[0].shortenedURL").value("b"))
-                .andExpect(jsonPath("$[1].expandedURL").value("http://someexpandedurl.two/somepath"))
-                .andExpect(jsonPath("$[1].shortenedURL").value("c"));
-
+                .andExpect(jsonPath("$[0].shortenedURL").value("b"));
+                
         verify(urlService, times(1)).findAll();
     }
     @Test
