@@ -29,5 +29,4 @@ public class urlDTO {
     public void setExpandedURL(String expandedURL) {
         this.expandedURL = expandedURL;
     }
-    
 }
