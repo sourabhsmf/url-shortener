@@ -1,11 +1,17 @@
 package com.infocloudproject.urlshortener.domain;
 
-public class URL {
-    
+public class urlDTO {
+
     private String expandedURL;
 
     private String shortenedURL;
 
+    public urlDTO(String expandedURL, String shortenedURL){
+        this.expandedURL = expandedURL;
+        this.shortenedURL = shortenedURL;
+    }
+    public urlDTO(){
+    }
     // private Boolean wroteToFile;
 
     public String getExpandedURL() {

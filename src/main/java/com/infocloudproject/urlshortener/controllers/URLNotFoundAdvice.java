@@ -13,7 +13,7 @@ public class URLNotFoundAdvice {
   @ResponseBody
   @ExceptionHandler(URLNotFoundException.class)
   @ResponseStatus(HttpStatus.NOT_FOUND)
-  String employeeNotFoundHandler(URLNotFoundException ex) {
+  String urlNotFoundHandler(URLNotFoundException ex) {
     return ex.getMessage();
   }
 }

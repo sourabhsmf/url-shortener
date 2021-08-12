@@ -29,4 +29,9 @@ public class URLConversion {
         }
         return id;
     }
+
+    public String extractEncodedIndex(String shortenedURL) {
+        String[] allSlashSeperatedValue = shortenedURL.split("/");
+        return allSlashSeperatedValue[allSlashSeperatedValue.length - 1];
+    }
 }

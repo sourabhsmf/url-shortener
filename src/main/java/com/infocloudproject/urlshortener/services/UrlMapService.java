@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import com.infocloudproject.urlshortener.domain.URL;
+import com.infocloudproject.urlshortener.domain.urlDTO;
 import com.infocloudproject.urlshortener.utils.URLConversion;
 
 import org.springframework.stereotype.Service;
@@ -14,7 +14,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class UrlMapService implements UrlService{
 
-    protected Map<Long, URL> map = new HashMap<>();
+    /**
+     *
+     */
+    private static final String HTTPS_SHORTI_FY = "https://shorti.fy/";
+
+    protected Map<Long, urlDTO> map = new HashMap<>();
 
     private final URLConversion urlConversion;
 
@@ -23,30 +28,31 @@ public class UrlMapService implements UrlService{
     }
 
     @Override
-    public Set<URL> findAll() {
+    public Set<urlDTO> findAll() {
         return new HashSet<>(map.values()); 
     }
 
     @Override
-    public Optional<URL> findByShortenedURL(String shortenedURL) {
-        return Optional.ofNullable(map.get(urlConversion.decode(shortenedURL)));
+    public Optional<urlDTO> findByShortenedURL(String shortenedURL) {
+        String shortenedURLEncoded = urlConversion.extractEncodedIndex(shortenedURL);
+        return Optional.ofNullable(map.get(urlConversion.decode(shortenedURLEncoded)));
     }
 
     @Override
-    public Optional<URL> find(URL url) {
-        URL urlFound = null;
-        for(URL entry : map.values()){
+    public Optional<urlDTO> find(urlDTO url) {
+        urlDTO urlFound = null;
+        for(urlDTO entry : map.values()){
             if(entry.getExpandedURL().equals(url.getExpandedURL())) urlFound = url;
         }
         return Optional.ofNullable(urlFound);
     }
 
     @Override
-    public URL save(URL object) {
-        Optional<URL> urlToSave = find(object);
+    public urlDTO save(urlDTO object) {
+        Optional<urlDTO> urlToSave = find(object);
         if(object != null && urlToSave.isEmpty()){
             Long id = getNextId();
-            object.setShortenedURL(urlConversion.encode(id));
+            object.setShortenedURL(HTTPS_SHORTI_FY + urlConversion.encode(id));
             map.put(id, object);
             
         }else if(urlToSave.isPresent()){
@@ -58,7 +64,7 @@ public class UrlMapService implements UrlService{
     }
 
     @Override
-    public void delete(URL object) {
+    public void delete(urlDTO object) {
         map.entrySet().removeIf(entry -> entry.getValue().equals(object));    
     }
 
