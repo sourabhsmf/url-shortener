@@ -1,5 +1,6 @@
 package com.infocloudproject.urlshortener.tasks;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,7 +22,8 @@ public class StartUpFillUrls implements CommandLineRunner{
 
     @Override
     public void run(String... args) throws Exception {
-        List<String> urlDtoEntries = Files.readAllLines(Paths.get("data/data.csv"), StandardCharsets.UTF_16);
+        String pathToLoadFile = "." + File.separator + "data" + File.separator + "data.csv";
+        List<String> urlDtoEntries = Files.readAllLines(Paths.get(pathToLoadFile), StandardCharsets.UTF_16);
         if(!urlDtoEntries.isEmpty() && urlDtoEntries.get(0).length() > 1){
             urlMapService.addAll(urlDtoEntries);
         }

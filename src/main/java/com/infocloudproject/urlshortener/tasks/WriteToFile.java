@@ -1,5 +1,6 @@
 package com.infocloudproject.urlshortener.tasks;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -34,7 +35,8 @@ public class WriteToFile implements Runnable{
                         + "\n";
 
         try {
-            Files.writeString(Paths.get("data/data.csv"), toWrite, StandardCharsets.UTF_16, StandardOpenOption.APPEND);
+            String pathToLoadFile = "." + File.separator + "data" + File.separator + "data.csv";
+            Files.writeString(Paths.get(pathToLoadFile), toWrite, StandardCharsets.UTF_16, StandardOpenOption.APPEND);
         }catch (IOException e) {
             e.printStackTrace();
         }

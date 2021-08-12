@@ -10,7 +10,7 @@
 ### maven build 
 > `mvn package`
 ### Run jar artifact using 
-> `java -jar urlshortenerapp.jar`
+> `java -jar target\urlshortenerapp.jar`
 
 ### Docker build image locally 
 > `docker build . -t urlshortenerapp:latest`
@@ -18,8 +18,8 @@
 ### Docker pull
 > `docker pull ghcr.io/sourabhsmf/url-shortener:master`
 
-### Run docker container
-> `docker run -p 8080:8080 --name app urlshortenerapp:latest`
+### Run docker container(use absolute path to cloned directory)
+> `docker run -v //d//devs//ic//url-shortener//data:/var/www/data:rw --name app urlshortenerapp:latest`
 
 ### Swagger at
 > http://localhost:8080/swagger-ui/
