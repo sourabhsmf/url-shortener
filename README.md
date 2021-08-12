@@ -10,7 +10,7 @@
 ### maven build 
 > `mvn package`
 ### Run jar artifact using 
-> `java -jar urlshortenerapp`
+> `java -jar urlshortenerapp.jar`
 
 ### Docker build image locally 
 > `docker build . -t urlshortenerapp:latest`
