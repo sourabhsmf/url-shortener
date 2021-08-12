@@ -2,6 +2,7 @@ package com.infocloudproject.urlshortener.controllers;
 
 import com.infocloudproject.urlshortener.domain.urlDTO;
 import com.infocloudproject.urlshortener.services.UrlService;
+import com.infocloudproject.urlshortener.validators.UrlValidation;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -31,8 +31,19 @@ import java.util.Set;
 @ExtendWith(MockitoExtension.class)
 public class URLControllerTest {
     
+    private static final String HTTP_SOMEEXPANDEDURL_TWO_SOMEPATH = "http://someexpandedurl.two/somepath";
+
+    private static final String HTTP_SOMEEXPANDEDURL_ONE_SOMEPATH = "http://someexpandedurl.one/somepath";
+
+    private static final String HTTP_SOMEURL_SOMEPATH = "http://someurl/somepath";
+
+    private static final String SOME_SHORTENED_URL = "http://shorti.fy/bc";
+
     @Mock
     UrlService urlService;
+
+    @Mock
+    UrlValidation urlValidation;
 
     @InjectMocks
     URLController urlController;
@@ -42,14 +53,13 @@ public class URLControllerTest {
     urlDTO url1 = new urlDTO(); 
     urlDTO url2 = new urlDTO(); 
     
-    
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(urlController).build();
-        url1.setExpandedURL("http://someexpandedurl.one/somepath");
-        url2.setExpandedURL("http://someexpandedurl.two/somepath");
-        url1.setShortenedURL("b");
-        url2.setShortenedURL("c");
+        url1.setExpandedURL(HTTP_SOMEEXPANDEDURL_ONE_SOMEPATH);
+        url2.setExpandedURL(HTTP_SOMEEXPANDEDURL_TWO_SOMEPATH);
+        url1.setShortenedURL(SOME_SHORTENED_URL);
+        url2.setShortenedURL(SOME_SHORTENED_URL);
     }
     
     @Test
@@ -63,32 +73,33 @@ public class URLControllerTest {
         //When
         mockMvc.perform(get("/api/"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].expandedURL").value("http://someexpandedurl.one/somepath"))
-                .andExpect(jsonPath("$[0].shortenedURL").value("b"));
+                .andExpect(jsonPath("$[0].expandedURL").value(HTTP_SOMEEXPANDEDURL_ONE_SOMEPATH))
+                .andExpect(jsonPath("$[0].shortenedURL").value(SOME_SHORTENED_URL));
                 
         verify(urlService, times(1)).findAll();
     }
     @Test
     void findUrl() throws Exception{
         //given
+        when(urlValidation.isValidUrl(anyString())).thenReturn(Optional.ofNullable(url1));
         when(urlService.findByShortenedURL(anyString())).thenReturn(Optional.ofNullable(url1));
 
         //when
-        mockMvc.perform(get("/api/b"))
+        mockMvc.perform(get("/api/find?shortenedURL=" + SOME_SHORTENED_URL))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.expandedURL").value("http://someexpandedurl.one/somepath"))
-            .andExpect(jsonPath("$.shortenedURL").value("b"));
+            .andExpect(jsonPath("$.expandedURL").value(HTTP_SOMEEXPANDEDURL_ONE_SOMEPATH))
+            .andExpect(jsonPath("$.shortenedURL").value(SOME_SHORTENED_URL));
 
         verify(urlService, times(1)).findByShortenedURL(anyString());
         
     }
     @Test
     void createUrl() throws Exception{
-        
+        when(urlValidation.isValidUrl(anyString())).thenReturn(Optional.ofNullable(url1));
         //given
         urlDTO urlToReturn = new urlDTO();
-        urlToReturn.setExpandedURL("http://someurl/somepath");
-        urlToReturn.setShortenedURL("b");
+        urlToReturn.setExpandedURL(HTTP_SOMEURL_SOMEPATH);
+        urlToReturn.setShortenedURL(SOME_SHORTENED_URL);
 
         
         //when
@@ -97,20 +108,21 @@ public class URLControllerTest {
         //then
         mockMvc.perform(post("/api/create")
                             .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-                            .content("url=http://someurl/somepath")
+                            .content("url=" + HTTP_SOMEURL_SOMEPATH)
                         )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.expandedURL").value("http://someurl/somepath"))
-                .andExpect(jsonPath("$.shortenedURL").value("b"));
+                .andExpect(jsonPath("$.expandedURL").value(HTTP_SOMEURL_SOMEPATH))
+                .andExpect(jsonPath("$.shortenedURL").value(SOME_SHORTENED_URL));
 
         verify(urlService, times(1)).save(any(urlDTO.class));
     }
     @Test
     void deleteUrl() throws Exception{
         //given
+        when(urlValidation.isValidUrl(anyString())).thenReturn(Optional.ofNullable(url1));
         when(urlService.findByShortenedURL(anyString())).thenReturn(Optional.ofNullable(url1));
         //when
-        mockMvc.perform(delete("/api/b/delete"))
+        mockMvc.perform(delete("/api/delete?shortenedURL=" + SOME_SHORTENED_URL))
             .andExpect(status().isOk());
 
         //then

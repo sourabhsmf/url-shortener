@@ -25,6 +25,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class UrlMapServiceTest {
 
+    private static final String HTTP_SOMEEXPANDEDURL_TWO_SOMEPATH = "http://someexpandedurl.two/somepath";
+
+    private static final String HTTP_SOMEEXPANDEDURL_ONE_SOMEPATH = "http://someexpandedurl.one/somepath";
+
+    private static final String SOME_SHORTENED_URL = "http://shorti.fy/bc";
+
     @Mock
     URLConversion urlConversion;
 
@@ -36,8 +42,8 @@ public class UrlMapServiceTest {
 
     @BeforeEach
     public void setUp(){
-        url1.setExpandedURL("http://someexpandedurl.one/somepath");
-        url2.setExpandedURL("http://someexpandedurl.two/somepath");
+        url1.setExpandedURL(HTTP_SOMEEXPANDEDURL_ONE_SOMEPATH);
+        url2.setExpandedURL(HTTP_SOMEEXPANDEDURL_TWO_SOMEPATH);
     }
     @Test
     void findAll() {
@@ -65,9 +71,10 @@ public class UrlMapServiceTest {
         urlMapService.map.put(1L, url1);
         urlDTO urlExpected = url1;
         when(urlConversion.decode(anyString())).thenReturn(1L);
+        when(urlConversion.extractEncodedIndex(anyString())).thenReturn("b");
         
         //When
-        Optional<urlDTO> urlActual = urlMapService.findByShortenedURL("SOME_SHORTENED_URL");
+        Optional<urlDTO> urlActual = urlMapService.findByShortenedURL(SOME_SHORTENED_URL);
 
         //Then
         assertTrue(urlActual.isPresent());
@@ -87,9 +94,9 @@ public class UrlMapServiceTest {
     @Test
     void save() {
         //Given
-        url1.setShortenedURL("SOME_SHORTENED_URL");
+        url1.setShortenedURL(SOME_SHORTENED_URL);
         urlDTO urlToSave = url1;
-        when(urlConversion.encode(anyLong())).thenReturn("SOME_SHORTENED_URL");
+        when(urlConversion.encode(anyLong())).thenReturn(SOME_SHORTENED_URL);
 
         //When
         urlDTO savedUrl = urlMapService.save(urlToSave);
@@ -117,7 +124,7 @@ public class UrlMapServiceTest {
         when(urlConversion.decode(anyString())).thenReturn(1L);
 
         //When
-        urlMapService.deleteByShortenedURL("SOME_SHORTENED_URL");;
+        urlMapService.deleteByShortenedURL(SOME_SHORTENED_URL);;
 
         //then
         assertTrue(urlMapService.map.isEmpty());

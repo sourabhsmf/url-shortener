@@ -37,7 +37,7 @@ public class URLController {
     public Set<urlDTO> index(){
         return urlService.findAll();
     }
-    @GetMapping({"/{shortenedURL}"})
+    @GetMapping({"/find"})
     public urlDTO findUrl(@RequestParam String shortenedURL){
         urlValidation.isValidUrl(shortenedURL).orElseThrow(() -> new MalformedURLException(shortenedURL));
         return urlService.findByShortenedURL(shortenedURL)
@@ -54,7 +54,7 @@ public class URLController {
     }
 
     //CRUD operation - Delete
-    @DeleteMapping({"/{shortenedURL}/delete"})
+    @DeleteMapping({"/delete"})
     public urlDTO deleteUrl(@RequestParam String shortenedURL) {
         urlValidation.isValidUrl(shortenedURL).orElseThrow(() -> new MalformedURLException(shortenedURL));
         
