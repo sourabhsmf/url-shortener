@@ -1,6 +1,6 @@
 package com.infocloudproject.urlshortener.controllers;
 
-import com.infocloudproject.urlshortener.domain.URL;
+import com.infocloudproject.urlshortener.domain.urlDTO;
 import com.infocloudproject.urlshortener.services.UrlService;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -39,8 +39,8 @@ public class URLControllerTest {
 
     MockMvc mockMvc;
 
-    URL url1 = new URL(); 
-    URL url2 = new URL(); 
+    urlDTO url1 = new urlDTO(); 
+    urlDTO url2 = new urlDTO(); 
     
     
     @BeforeEach
@@ -55,7 +55,7 @@ public class URLControllerTest {
     @Test
     void index() throws Exception{
         //Given
-        Set<URL> urlSetToReturn = new HashSet<>();
+        Set<urlDTO> urlSetToReturn = new HashSet<>();
         urlSetToReturn.add(url1);
         
         when(urlService.findAll()).thenReturn(urlSetToReturn);
@@ -86,13 +86,13 @@ public class URLControllerTest {
     void createUrl() throws Exception{
         
         //given
-        URL urlToReturn = new URL();
+        urlDTO urlToReturn = new urlDTO();
         urlToReturn.setExpandedURL("http://someurl/somepath");
         urlToReturn.setShortenedURL("b");
 
         
         //when
-        when(urlService.save(any(URL.class))).thenReturn(urlToReturn);
+        when(urlService.save(any(urlDTO.class))).thenReturn(urlToReturn);
 
         //then
         mockMvc.perform(post("/api/create")
@@ -103,7 +103,7 @@ public class URLControllerTest {
                 .andExpect(jsonPath("$.expandedURL").value("http://someurl/somepath"))
                 .andExpect(jsonPath("$.shortenedURL").value("b"));
 
-        verify(urlService, times(1)).save(any(URL.class));
+        verify(urlService, times(1)).save(any(urlDTO.class));
     }
     @Test
     void deleteUrl() throws Exception{
@@ -114,6 +114,6 @@ public class URLControllerTest {
             .andExpect(status().isOk());
 
         //then
-        verify(urlService, times(1)).delete(any(URL.class));
+        verify(urlService, times(1)).delete(any(urlDTO.class));
     }
 }

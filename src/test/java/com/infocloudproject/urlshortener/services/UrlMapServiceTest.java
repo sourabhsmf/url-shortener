@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import com.infocloudproject.urlshortener.domain.URL;
+import com.infocloudproject.urlshortener.domain.urlDTO;
 import com.infocloudproject.urlshortener.utils.URLConversion;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -31,8 +31,8 @@ public class UrlMapServiceTest {
     @InjectMocks
     UrlMapService urlMapService;
 
-    URL url1 = new URL(); 
-    URL url2 = new URL();
+    urlDTO url1 = new urlDTO(); 
+    urlDTO url2 = new urlDTO();
 
     @BeforeEach
     public void setUp(){
@@ -42,7 +42,7 @@ public class UrlMapServiceTest {
     @Test
     void findAll() {
         //Given
-        Set<URL> urlSetExpected = new HashSet<>();
+        Set<urlDTO> urlSetExpected = new HashSet<>();
         urlSetExpected.add(url1);
         urlSetExpected.add(url2);
     
@@ -50,7 +50,7 @@ public class UrlMapServiceTest {
         urlMapService.map.put(2L, url2);
     
         //When
-        Set<URL> urlSetActual = urlMapService.findAll();
+        Set<urlDTO> urlSetActual = urlMapService.findAll();
 
         //Then
         assertNotNull(urlSetActual);
@@ -63,11 +63,11 @@ public class UrlMapServiceTest {
     void findByShortenedURL() {
         //Given
         urlMapService.map.put(1L, url1);
-        URL urlExpected = url1;
+        urlDTO urlExpected = url1;
         when(urlConversion.decode(anyString())).thenReturn(1L);
         
         //When
-        Optional<URL> urlActual = urlMapService.findByShortenedURL("SOME_SHORTENED_URL");
+        Optional<urlDTO> urlActual = urlMapService.findByShortenedURL("SOME_SHORTENED_URL");
 
         //Then
         assertTrue(urlActual.isPresent());
@@ -76,10 +76,10 @@ public class UrlMapServiceTest {
     @Test
     void findDoesNotExsist() {
         //Given - map does not contain any entry
-        URL urlToFindExpected = url1;
+        urlDTO urlToFindExpected = url1;
 
         //when - search for a url
-        Optional<URL> urlFoundActual = urlMapService.find(urlToFindExpected);
+        Optional<urlDTO> urlFoundActual = urlMapService.find(urlToFindExpected);
 
         //then returned value should be null
         assertTrue(urlFoundActual.isEmpty());
@@ -88,11 +88,11 @@ public class UrlMapServiceTest {
     void save() {
         //Given
         url1.setShortenedURL("SOME_SHORTENED_URL");
-        URL urlToSave = url1;
+        urlDTO urlToSave = url1;
         when(urlConversion.encode(anyLong())).thenReturn("SOME_SHORTENED_URL");
 
         //When
-        URL savedUrl = urlMapService.save(urlToSave);
+        urlDTO savedUrl = urlMapService.save(urlToSave);
         
         //Then
         assertEquals(urlToSave, savedUrl);

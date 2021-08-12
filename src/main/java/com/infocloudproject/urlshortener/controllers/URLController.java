@@ -1,10 +1,14 @@
 package com.infocloudproject.urlshortener.controllers;
 
+import java.util.Optional;
 import java.util.Set;
 
-import com.infocloudproject.urlshortener.domain.URL;
+
+import com.infocloudproject.urlshortener.domain.urlDTO;
+import com.infocloudproject.urlshortener.exceptions.MalformedURLException;
 import com.infocloudproject.urlshortener.exceptions.URLNotFoundException;
 import com.infocloudproject.urlshortener.services.UrlService;
+import com.infocloudproject.urlshortener.validators.UrlValidation;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,33 +25,40 @@ public class URLController {
     
     private final UrlService urlService;
 
-    public URLController(UrlService urlService) {
+    private final UrlValidation urlValidation;
+
+    public URLController(UrlService urlService, UrlValidation urlValidation) {
         this.urlService = urlService;
+        this.urlValidation = urlValidation;
     }
 
     //CRUD operations - Read
     @GetMapping({""})
-    public Set<URL> index(){
+    public Set<urlDTO> index(){
         return urlService.findAll();
     }
     @GetMapping({"/{shortenedURL}"})
-    public URL findUrl(@PathVariable String shortenedURL){
+    public urlDTO findUrl(@RequestParam String shortenedURL){
+        urlValidation.isValidUrl(shortenedURL).orElseThrow(() -> new MalformedURLException(shortenedURL));
         return urlService.findByShortenedURL(shortenedURL)
                             .orElseThrow(() -> new URLNotFoundException(shortenedURL));
     }
 
     //CRUD operation - Create
     @PostMapping(path = {"/create"}, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public URL createUrl(@RequestParam String url){
-        URL urlToSave = new URL();
+    public urlDTO createUrl(@RequestParam String url){
+        urlValidation.isValidUrl(url).orElseThrow(() -> new MalformedURLException(url));
+        urlDTO urlToSave = new urlDTO();
         urlToSave.setExpandedURL(url);
         return urlService.save(urlToSave);
     }
 
     //CRUD operation - Delete
     @DeleteMapping({"/{shortenedURL}/delete"})
-    public URL deleteUrl(@PathVariable String shortenedURL) {
-        URL urlToDelete = urlService.findByShortenedURL(shortenedURL)
+    public urlDTO deleteUrl(@RequestParam String shortenedURL) {
+        urlValidation.isValidUrl(shortenedURL).orElseThrow(() -> new MalformedURLException(shortenedURL));
+        
+        urlDTO urlToDelete = urlService.findByShortenedURL(shortenedURL)
                                     .orElseThrow(() -> new URLNotFoundException(shortenedURL));
         if(urlToDelete != null){
             urlService.delete(urlToDelete);
