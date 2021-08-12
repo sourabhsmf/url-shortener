@@ -24,3 +24,7 @@
 ### Swagger at
 > http://localhost:8080/swagger-ui/
 
+### curl to endpoint creates a shortend url
+> `curl -X POST "http://localhost:8080/api/create" -H  "accept: application/json" -H  "Content-Type: application/x-www-form-urlencoded" -d "url=https%3A%2F%2Fgithub.com%2Fsourabhsmf%2Furl-shortener"`
+### curl to endpoint finds a shortend url
+> `curl -X GET "http://localhost:8080/api/find?shortenedURL=https%3A%2F%2Fshorti.fy%2Fb" -H  "accept: application/json"`
