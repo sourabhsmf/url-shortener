@@ -22,8 +22,11 @@ public class UrlMapService implements UrlService{
 
     private final URLConversion urlConversion;
 
-    public UrlMapService(URLConversion urlConversion) {
+    private final ConfigService configService;
+
+    public UrlMapService(URLConversion urlConversion, ConfigService configService) {
         this.urlConversion = urlConversion;
+        this.configService = configService;
     }
 
     @Override
@@ -53,7 +56,7 @@ public class UrlMapService implements UrlService{
             Long id = getNextId();
             object.setShortenedURL(HTTPS_SHORTI_FY + urlConversion.encode(id));
             map.put(id, object);
-            asyncWrite(object);
+            if(configService.getFileWriteConfig()) asyncWrite(object);
         }else if(urlToSave.isPresent()){
             return urlToSave.get();
         }else{

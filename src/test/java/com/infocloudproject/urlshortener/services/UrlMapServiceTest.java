@@ -34,6 +34,9 @@ public class UrlMapServiceTest {
     @Mock
     URLConversion urlConversion;
 
+    @Mock
+    ConfigService configService;
+
     @InjectMocks
     UrlMapService urlMapService;
 
