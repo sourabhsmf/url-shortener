@@ -15,7 +15,6 @@ import java.util.Set;
 import com.infocloudproject.urlshortener.domain.URL;
 import com.infocloudproject.urlshortener.utils.URLConversion;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
